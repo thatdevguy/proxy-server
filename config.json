@@ -1,8 +1,11 @@
 {
-    "allowed-methods" : [ "GET" ],
+    "allowed-methods": [ "GET" ],
+    "cookie-name": "NABISCO",
+    "cookie-method": true,
+    "cookie-maxage" : 60,
     "endpoint": "https://cfw-takehome.developers.workers.dev/api/variants",
     "variants-field": "variants",
     "variants-min-length": 2,
-    "cookie-method": false,
-    "developer": "bvaibhav.career@gmail.com"
+    "developer": "bvaibhav.career@gmail.com",
+    "resume": "https://thatguy.asia"
 }

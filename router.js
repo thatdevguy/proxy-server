@@ -1,6 +1,20 @@
 const config = require('./config');
 const utils = require('./utils');
 
+const getGroupFromCache = (request, links) => {
+    if (config['cookie-method']) { //enabled cookie store
+        const cookies = utils.getCookieMap(request);
+        if (cookies[config['cookie-name']]) {
+            const group = parseInt(cookies[config['cookie-name']]);
+            // check if old group is still valid
+            if (group && group > 0 && group <= links.length) {
+                return group;
+            }               
+        }
+    }
+    return null;
+};
+
 const getLinks = async endpoint => {
     try {
         const response = await utils.fetchLink(endpoint);
@@ -18,37 +32,37 @@ const getLinks = async endpoint => {
     }
 };
 
-const loadBalancer = async (request, links) => {
-    if (config['cookie-method']) {
-        return new Response('hello world1', {
-            headers: {
-                "content-type" : "text/html"
-            }
-        });
-    } else {
-        const link = links[utils.getRandomInteger(0, links.length - 1)]; //random select a link
-        console.debug(link);
-        const response = await utils.fetchLink(link);
-        const content = await response.text();
-        return new Response(content, {
-            headers: {
-                "content-type" : "text/html"
-            }
-        });
-    }
+const loadBalancer = async request => {
+    const endpoint = config.endpoint || "https://cfw-takehome.developers.workers.dev/api/variants";
+    const links = await getLinks(endpoint);
+    const group = getGroupFromCache(request, links) || utils.getRandomInteger(1, links.length); //randomly select a link
+    const link = links[group - 1];
+    console.debug(link);
+    const response = await utils.fetchLink(link);
+    const modified_content = await utils.rewriter(group, response).text();
+
+    //not setting max-age as per requirement
+    return new Response(modified_content, {
+        headers: {
+            "content-type" : "text/html",
+            "set-cookie": `${config['cookie-name']}=${group}; SameSite=Strict; Path=/`
+        }
+    });
 };
 
 const requestHandler = async request => {
     try {
-        //check cookie already has a link, if not proceed heavy duty
-        const endpoint = config.endpoint || "https://cfw-takehome.developers.workers.dev/api/variants";
-        const links = await getLinks(endpoint);
-        //TODO: distribute requests on cookies
-        return  loadBalancer(request, links);
+        return loadBalancer(request);
     } catch (e) {
-        //send error message and developer contact
+        //TODO: send error message and developer contact info
+        console.error(e.message);
+        //TODO: delete previous cookies to resolve issue
+        return new Response(`${e.message} \nOh Oh! Kindly contact ${config['developer']}`, {
+            headers: {
+                "content-type" : "text"
+            }
+        });
     }
-
 };
 
 module.exports = {
