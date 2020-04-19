@@ -1,0 +1,8 @@
+{
+    "allowed-methods" : ["GET"],
+    "endpoint": "https://cfw-takehome.developers.workers.dev/api/variants",
+    "variants-field": "variants",
+    "variants-min-length": 2,
+    "cookie-method": true,
+    "developer": "bvaibhav.career@gmail.com"
+}
