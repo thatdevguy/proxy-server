@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "worker",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A template for kick starting a Cloudflare Workers project",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,9 @@
     "format": "prettier --write '**/*.{js,css,json,md}'"
   },
   "author": "Kristian Freeman <kristian@kristianfreeman.com>",
+  "contributors": [
+    "Vaibhav Bandikatla <vaibhavb995@gmail.com> (https://thatguy.asia)"
+  ],
   "license": "MIT",
   "devDependencies": {
     "prettier": "^1.18.2"
