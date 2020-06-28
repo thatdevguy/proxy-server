@@ -2,13 +2,13 @@
   "private": true,
   "name": "worker",
   "version": "1.1.0",
-  "description": "A template for kick starting a Cloudflare Workers project",
+  "description": "proxy server",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write '**/*.{js,css,json,md}'"
   },
-  "author": "Kristian Freeman <kristian@kristianfreeman.com>",
   "contributors": [
     "Vaibhav Bandikatla <vaibhavb995@gmail.com> (https://thatguy.asia)"
   ],
